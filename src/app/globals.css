@@ -1,0 +1,160 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   Way More — design tokens
+   Derived from the brand mockups: deep evergreen ink, signal lime, warm paper.
+   ========================================================================== */
+@theme {
+  /* brand ------------------------------------------------------------ */
+  --color-ink-950: #071A14;
+  --color-ink-900: #0B2820;
+  --color-ink-800: #10352A;
+  --color-ink-700: #174536;
+  --color-ink-600: #235B49;
+  --color-ink-400: #4C8272;
+  --color-ink-200: #A9C4BA;
+
+  --color-lime-50:  #F4FCE7;
+  --color-lime-100: #E6F8C9;
+  --color-lime-200: #D2F29D;
+  --color-lime-300: #BCEC6E;
+  --color-lime-400: #A6E84D;
+  --color-lime-500: #8FD62F;
+  --color-lime-600: #74B424;
+  --color-lime-700: #588A1E;
+
+  --color-mint-50:  #F3FAEC;
+  --color-mint-100: #E9F6DA;
+
+  /* neutrals --------------------------------------------------------- */
+  --color-paper:    #F7F8F6;
+  --color-surface:  #FFFFFF;
+  --color-line:     #E3E7E1;
+  --color-line-strong: #CED5CA;
+  --color-heading:  #0F1F1A;
+  --color-body:     #55635C;
+  --color-muted:    #7C8A83;
+
+  /* semantic --------------------------------------------------------- */
+  --color-success:  #15A24A;
+  --color-success-bg: #E8F7ED;
+  --color-info:     #2563EB;
+  --color-info-bg:  #E8F0FE;
+  --color-danger:   #DC2626;
+  --color-danger-bg: #FDECEC;
+  --color-warn:     #D97706;
+  --color-warn-bg:  #FEF3E2;
+
+  /* type ------------------------------------------------------------- */
+  --font-display: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  /* elevation -------------------------------------------------------- */
+  --shadow-card: 0 1px 2px rgb(15 31 26 / 0.04), 0 4px 16px -4px rgb(15 31 26 / 0.08);
+  --shadow-pop: 0 8px 32px -8px rgb(15 31 26 / 0.18);
+  --shadow-lift: 0 2px 4px rgb(15 31 26 / 0.05), 0 12px 32px -8px rgb(15 31 26 / 0.14);
+
+  /* motion ----------------------------------------------------------- */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+@layer base {
+  * {
+    border-color: var(--color-line);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--color-paper);
+    color: var(--color-body);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5 {
+    font-family: var(--font-display);
+    color: var(--color-heading);
+    letter-spacing: -0.02em;
+    font-weight: 700;
+    text-wrap: balance;
+  }
+
+  p { text-wrap: pretty; }
+
+  /* Focus ring — visible for keyboard users, invisible for mouse users. */
+  :focus-visible {
+    outline: 2px solid var(--color-ink-600);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background: var(--color-lime-300);
+    color: var(--color-ink-950);
+  }
+}
+
+/* ==========================================================================
+   Utilities
+   ========================================================================== */
+@utility container-page {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 80rem;
+  padding-inline: 1rem;
+  @media (width >= 640px) { padding-inline: 1.5rem; }
+  @media (width >= 1024px) { padding-inline: 2rem; }
+}
+
+/* Hand-lettered brand voice, used for the "More Money. Less Hassle." marks. */
+@utility script-mark {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+}
+
+@utility scrollbar-slim {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-line-strong) transparent;
+  &::-webkit-scrollbar { width: 8px; height: 8px; }
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-line-strong);
+    border-radius: 99px;
+  }
+  &::-webkit-scrollbar-track { background: transparent; }
+}
+
+@keyframes wm-fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+@utility animate-fade-up {
+  animation: wm-fade-up 0.45s var(--ease-out-soft) both;
+}
+
+@keyframes wm-pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.45; transform: scale(0.85); }
+}
+@utility animate-pulse-dot {
+  animation: wm-pulse-dot 1.8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

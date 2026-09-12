@@ -1,0 +1,261 @@
+[
+  {
+    "file": "images/dealer-lot.jpg",
+    "provider": "Unsplash",
+    "title": "1506521781263-d8422e82f27a",
+    "credit": "Unsplash contributor",
+    "license": "Unsplash License",
+    "source": "https://unsplash.com/photos/1506521781263-d8422e82f27a"
+  },
+  {
+    "file": "images/handshake.jpg",
+    "provider": "Unsplash",
+    "title": "1521791136064-7986c2920216",
+    "credit": "Unsplash contributor",
+    "license": "Unsplash License",
+    "source": "https://unsplash.com/photos/1521791136064-7986c2920216"
+  },
+  {
+    "file": "images/hero-road.jpg",
+    "provider": "Unsplash",
+    "title": "1568605117036-5fe5e7bab0b7",
+    "credit": "Unsplash contributor",
+    "license": "Unsplash License",
+    "source": "https://unsplash.com/photos/1568605117036-5fe5e7bab0b7"
+  },
+  {
+    "file": "images/highway.jpg",
+    "provider": "Unsplash",
+    "title": "1503376780353-7e6692767b70",
+    "credit": "Unsplash contributor",
+    "license": "Unsplash License",
+    "source": "https://unsplash.com/photos/1503376780353-7e6692767b70"
+  },
+  {
+    "file": "images/open-road.jpg",
+    "provider": "Wikimedia Commons",
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/51/Drowsy_Driving_Causes_Crashes.jpg/1920px-Drowsy_Driving_Causes_Crashes.jpg",
+    "title": "Drowsy Driving Causes Crashes.jpg",
+    "credit": "Ken Lund",
+    "license": "CC BY-SA 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Drowsy_Driving_Causes_Crashes.jpg"
+  },
+  {
+    "file": "images/phone-photo.jpg",
+    "provider": "Unsplash",
+    "title": "1512428559087-560fa5ceab42",
+    "credit": "Unsplash contributor",
+    "license": "Unsplash License",
+    "source": "https://unsplash.com/photos/1512428559087-560fa5ceab42"
+  },
+  {
+    "file": "images/side-mirror.jpg",
+    "provider": "Wikimedia Commons",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/7/77/EB_Valrico_Subdivision_from_Keysville_Road_Xing.jpg",
+    "title": "EB Valrico Subdivision from Keysville Road Xing.jpg",
+    "credit": "DanTD",
+    "license": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:EB_Valrico_Subdivision_from_Keysville_Road_Xing.jpg"
+  },
+  {
+    "file": "images/steering-wheel.jpg",
+    "provider": "Unsplash",
+    "title": "1449965408869-eaa3f722e40d",
+    "credit": "Unsplash contributor",
+    "license": "Unsplash License",
+    "source": "https://unsplash.com/photos/1449965408869-eaa3f722e40d"
+  },
+  {
+    "file": "images/sunset-drive.jpg",
+    "provider": "Unsplash",
+    "title": "1494905998402-395d579af36f",
+    "credit": "Unsplash contributor",
+    "license": "Unsplash License",
+    "source": "https://unsplash.com/photos/1494905998402-395d579af36f"
+  },
+  {
+    "file": "images/vehicles/acura-rdx-2019.jpg",
+    "provider": "Wikimedia Commons",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Acura_RDX_III_05_China_2019-03-28.jpg",
+    "title": "Acura RDX III 05 China 2019-03-28.jpg",
+    "credit": "Navigator84",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Acura_RDX_III_05_China_2019-03-28.jpg"
+  },
+  {
+    "file": "images/vehicles/bmw-3series-2018.jpg",
+    "provider": "Unsplash",
+    "title": "1546614042-7df3c24c9e5d",
+    "credit": "Unsplash contributor",
+    "license": "Unsplash License",
+    "source": "https://unsplash.com/photos/1546614042-7df3c24c9e5d"
+  },
+  {
+    "file": "images/vehicles/chevrolet-equinox-2020.jpg",
+    "provider": "Wikimedia Commons",
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5a/2020_Chevrolet_Equinox_au_SIAM_2020.jpg/1920px-2020_Chevrolet_Equinox_au_SIAM_2020.jpg",
+    "title": "2020 Chevrolet Equinox au SIAM 2020.jpg",
+    "credit": "Bull-Doser",
+    "license": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:2020_Chevrolet_Equinox_au_SIAM_2020.jpg"
+  },
+  {
+    "file": "images/vehicles/ford-explorer-2020.jpg",
+    "provider": "Wikimedia Commons",
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d5/2020_Ford_Explorer_%28sixth_generation%29_1.jpg/1920px-2020_Ford_Explorer_%28sixth_generation%29_1.jpg",
+    "title": "2020 Ford Explorer (sixth generation) 1.jpg",
+    "credit": "Benespit",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:2020_Ford_Explorer_(sixth_generation)_1.jpg"
+  },
+  {
+    "file": "images/vehicles/ford-f150-2021.jpg",
+    "provider": "Wikimedia Commons",
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/58/Ford_F_150_Lariat_Crew_Cab_FX4.jpeg/1920px-Ford_F_150_Lariat_Crew_Cab_FX4.jpeg",
+    "title": "Ford F 150 Lariat Crew Cab FX4.jpeg",
+    "credit": "Bull-Doser",
+    "license": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Ford_F_150_Lariat_Crew_Cab_FX4.jpeg"
+  },
+  {
+    "file": "images/vehicles/gmc-sierra-2021.jpg",
+    "provider": "Wikimedia Commons",
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/31/2021_GMC_Sierra_1500_Crew_Cab_Short_Bed_Elevation_4WD_X31_Off-Road_Package_in_Summit_White%2C_front_left%2C_2024-05-27.jpg/1920px-2021_GMC_Sierra_1500_Crew_Cab_Short_Bed_Elevation_4WD_X31_Off-Road_Package_in_Summit_White%2C_front_left%2C_2024-05-27.jpg",
+    "title": "2021 GMC Sierra 1500 Crew Cab Short Bed Elevation 4WD X31 Off-Road Package in Summit White, front left, 2024-05-27.jpg",
+    "credit": "Elise240SX",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:2021_GMC_Sierra_1500_Crew_Cab_Short_Bed_Elevation_4WD_X31_Off-Road_Package_in_Summit_White,_front_left,_2024-05-27.jpg"
+  },
+  {
+    "file": "images/vehicles/honda-accord-2019-b.jpg",
+    "provider": "Wikimedia Commons",
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cd/Honda_Accord_%28tenth_generation%3B_CV%29_%28side-rear%29_in_16_Ilir_-_Palembang%2C_SS_03.jpg/1920px-Honda_Accord_%28tenth_generation%3B_CV%29_%28side-rear%29_in_16_Ilir_-_Palembang%2C_SS_03.jpg",
+    "title": "Honda Accord (tenth generation; CV) (side-rear) in 16 Ilir - Palembang, SS 03.jpg",
+    "credit": "Firzafp",
+    "license": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Honda_Accord_(tenth_generation;_CV)_(side-rear)_in_16_Ilir_-_Palembang,_SS_03.jpg"
+  },
+  {
+    "file": "images/vehicles/honda-accord-2019.jpg",
+    "provider": "Wikimedia Commons",
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3e/2019_Honda_Accord_1.5T_Sport%2C_1.4.20.jpg/1920px-2019_Honda_Accord_1.5T_Sport%2C_1.4.20.jpg",
+    "title": "2019 Honda Accord 1.5T Sport, 1.4.20.jpg",
+    "credit": "Ghostofakina",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:2019_Honda_Accord_1.5T_Sport,_1.4.20.jpg"
+  },
+  {
+    "file": "images/vehicles/honda-civic-2020.jpg",
+    "provider": "Wikimedia Commons",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/6/61/Honda_Civic_FC_and_Honda_Integra_FE%2C_rear_20221011.jpg",
+    "title": "Honda Civic FC and Honda Integra FE, rear 20221011.jpg",
+    "credit": "Anhuicarspotter",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Honda_Civic_FC_and_Honda_Integra_FE,_rear_20221011.jpg"
+  },
+  {
+    "file": "images/vehicles/honda-crv-2019.jpg",
+    "provider": "Unsplash",
+    "title": "1519641471654-76ce0107ad1b",
+    "credit": "Unsplash contributor",
+    "license": "Unsplash License",
+    "source": "https://unsplash.com/photos/1519641471654-76ce0107ad1b"
+  },
+  {
+    "file": "images/vehicles/hyundai-tucson-2022.jpg",
+    "provider": "Wikimedia Commons",
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f1/Hyundai_Tucson_%28NX4%29_1X7A0424.jpg/1920px-Hyundai_Tucson_%28NX4%29_1X7A0424.jpg",
+    "title": "Hyundai Tucson (NX4) 1X7A0424.jpg",
+    "credit": "Alexander Migl",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Hyundai_Tucson_(NX4)_1X7A0424.jpg"
+  },
+  {
+    "file": "images/vehicles/jeep-wrangler-2020.jpg",
+    "provider": "Wikimedia Commons",
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/34/2020_Jeep_Wrangler_Rubicon_Unlimited_Automatic.jpg/1920px-2020_Jeep_Wrangler_Rubicon_Unlimited_Automatic.jpg",
+    "title": "2020 Jeep Wrangler Rubicon Unlimited Automatic.jpg",
+    "credit": "Calreyn88",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:2020_Jeep_Wrangler_Rubicon_Unlimited_Automatic.jpg"
+  },
+  {
+    "file": "images/vehicles/kia-telluride-2022.jpg",
+    "provider": "Wikimedia Commons",
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/29/2022_Kia_Telluride_DSC_2922.jpg/1920px-2022_Kia_Telluride_DSC_2922.jpg",
+    "title": "2022 Kia Telluride DSC 2922.jpg",
+    "credit": "Alexander Migl",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:2022_Kia_Telluride_DSC_2922.jpg"
+  },
+  {
+    "file": "images/vehicles/mazda-cx5-2017.jpg",
+    "provider": "Wikimedia Commons",
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6b/2017_Mazda_CX-5_%28KF%29_Maxx_2WD_wagon_%282018-11-02%29_02.jpg/1920px-2017_Mazda_CX-5_%28KF%29_Maxx_2WD_wagon_%282018-11-02%29_02.jpg",
+    "title": "2017 Mazda CX-5 (KF) Maxx 2WD wagon (2018-11-02) 02.jpg",
+    "credit": "EurovisionNim",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:2017_Mazda_CX-5_(KF)_Maxx_2WD_wagon_(2018-11-02)_02.jpg"
+  },
+  {
+    "file": "images/vehicles/nissan-altima-2019.jpg",
+    "provider": "Wikimedia Commons",
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/25/Nissan_Altima_10-12-2019.jpg/1920px-Nissan_Altima_10-12-2019.jpg",
+    "title": "Nissan Altima 10-12-2019.jpg",
+    "credit": "SsmIntrigue",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Nissan_Altima_10-12-2019.jpg"
+  },
+  {
+    "file": "images/vehicles/ram-1500-2019.jpg",
+    "provider": "Wikimedia Commons",
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6f/2019_Ram_1500_Laramie%2C_front_3.1.20.jpg/1920px-2019_Ram_1500_Laramie%2C_front_3.1.20.jpg",
+    "title": "2019 Ram 1500 Laramie, front 3.1.20.jpg",
+    "credit": "Kevauto",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:2019_Ram_1500_Laramie,_front_3.1.20.jpg"
+  },
+  {
+    "file": "images/vehicles/tesla-model-s.jpg",
+    "provider": "Wikimedia Commons",
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9e/Tesla_Model_S_%28Facelift_ab_04-2016%29_%28cropped%29.jpg/1920px-Tesla_Model_S_%28Facelift_ab_04-2016%29_%28cropped%29.jpg",
+    "title": "Tesla Model S (Facelift ab 04-2016) (cropped).jpg",
+    "credit": "Peteratkins",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Tesla_Model_S_(Facelift_ab_04-2016)_(cropped).jpg"
+  },
+  {
+    "file": "images/vehicles/toyota-rav4-2022.jpg",
+    "provider": "Wikimedia Commons",
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e7/Toyota_RAV4_Plug-in_Hybrid_GR_Sport_IMG_9896.jpg/1920px-Toyota_RAV4_Plug-in_Hybrid_GR_Sport_IMG_9896.jpg",
+    "title": "Toyota RAV4 Plug-in Hybrid GR Sport IMG 9896.jpg",
+    "credit": "Alexander-93",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Toyota_RAV4_Plug-in_Hybrid_GR_Sport_IMG_9896.jpg"
+  },
+  {
+    "file": "images/vehicles/toyota-tacoma-2019.jpg",
+    "provider": "Wikimedia Commons",
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a4/BakFlip_G2_Toyota_Tacoma_TRD_4X4.jpg/1920px-BakFlip_G2_Toyota_Tacoma_TRD_4X4.jpg",
+    "title": "BakFlip G2 Toyota Tacoma TRD 4X4.jpg",
+    "credit": "Esskay840",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:BakFlip_G2_Toyota_Tacoma_TRD_4X4.jpg"
+  },
+  {
+    "file": "images/vehicles/vw-jetta-2019.jpg",
+    "provider": "Unsplash",
+    "title": "1541899481282-d53bffe3c35d",
+    "credit": "Unsplash contributor",
+    "license": "Unsplash License",
+    "source": "https://unsplash.com/photos/1541899481282-d53bffe3c35d"
+  },
+  {
+    "file": "images/working.jpg",
+    "provider": "Unsplash",
+    "title": "1503945438517-f65904a52ce6",
+    "credit": "Unsplash contributor",
+    "license": "Unsplash License",
+    "source": "https://unsplash.com/photos/1503945438517-f65904a52ce6"
+  }
+]
