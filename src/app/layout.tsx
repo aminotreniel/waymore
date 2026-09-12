@@ -44,7 +44,16 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${poppins.variable} ${inter.variable}`}>
-      <body className="min-h-screen antialiased">
+      {/*
+        suppressHydrationWarning is scoped to <body> only. Browser extensions
+        (Grammarly, password managers, ad blockers) inject attributes onto
+        <body> before React hydrates — e.g. data-gr-ext-installed. Those are
+        third-party attributes on an element we don't otherwise control, and
+        without this every developer running such an extension sees a bogus
+        hydration error. It does NOT suppress warnings for anything nested
+        inside, so real mismatches in the app still surface.
+      */}
+      <body className="min-h-screen antialiased" suppressHydrationWarning>
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:z-50 focus:top-3 focus:left-3 focus:rounded-lg focus:bg-ink-950 focus:px-4 focus:py-2.5 focus:text-white focus:text-sm focus:font-semibold"
