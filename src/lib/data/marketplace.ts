@@ -351,6 +351,169 @@ export const messagesForThread = (threadId: string) =>
 
 export const threadById = (id: string) => threads.find((t) => t.id === id);
 
+
+/* ==================================================== dealer-side inbox */
+/*
+ * Threads as the DEALER sees them. The seller is deliberately not named:
+ * dealers see the vehicle, not the person, until an offer is accepted.
+ * `sellerId` is carried for lookups only and is never rendered.
+ */
+
+export const dealerThreads: Thread[] = [
+  {
+    id: "dthr_f150",
+    participantName: "Seller",
+    participantType: "seller",
+    dealerId: "dlr_kia",
+    sellerId: "sel_marcus",
+    vehicleId: "veh_f150",
+    subject: "Countered your bid at $29,400",
+    lastMessageAt: minutesAgo(18),
+    unreadCount: 1,
+    flag: "new",
+    pendingCounter: { amount: 29_400, expiresAt: inHours(23) },
+  },
+  {
+    id: "dthr_waymore_outbid",
+    participantName: "Way More",
+    participantType: "waymore",
+    dealerId: "dlr_kia",
+    sellerId: null,
+    vehicleId: "veh_telluride",
+    subject: "You were outbid on the 2022 Kia Telluride",
+    lastMessageAt: hoursAgo(2),
+    unreadCount: 1,
+    flag: "info",
+    pendingCounter: null,
+  },
+  {
+    id: "dthr_rav4",
+    participantName: "Seller",
+    participantType: "seller",
+    dealerId: "dlr_kia",
+    sellerId: "sel_priya",
+    vehicleId: "veh_rav4",
+    subject: "Question about the service history",
+    lastMessageAt: hoursAgo(9),
+    unreadCount: 0,
+    flag: null,
+    pendingCounter: null,
+  },
+  {
+    id: "dthr_waymore_tacoma",
+    participantName: "Way More",
+    participantType: "waymore",
+    dealerId: "dlr_kia",
+    sellerId: null,
+    vehicleId: "veh_tacoma",
+    subject: "Payment confirmed — 2019 Toyota Tacoma",
+    lastMessageAt: daysAgo(7),
+    unreadCount: 0,
+    flag: null,
+    pendingCounter: null,
+  },
+];
+
+export const dealerMessages: Message[] = [
+  /* ---------------------------------------------- the price negotiation */
+  {
+    id: "dmsg_f1",
+    threadId: "dthr_f150",
+    authorType: "dealer",
+    authorName: "You — Dealer Kia",
+    body: "Bid submitted through this week's event.",
+    sentAt: hoursAgo(6),
+    read: true,
+    attachedOfferId: null,
+    attachedBidId: "bid_10",
+  },
+  {
+    id: "dmsg_f2",
+    threadId: "dthr_f150",
+    authorType: "seller",
+    authorName: "Seller",
+    body: "Thanks for the bid. I was hoping to be closer to $30,000. It has the tow package, the bed liner, and I put four new tyres on it in June with receipts.",
+    sentAt: hoursAgo(4),
+    read: true,
+    attachedOfferId: null,
+  },
+  {
+    id: "dmsg_f3",
+    threadId: "dthr_f150",
+    authorType: "dealer",
+    authorName: "You — Dealer Kia",
+    body: "Appreciated, and the tyres do help. $28,500 reflects the 54,200 miles and what I'd need to spend getting it front-line ready — it'll want a detail and the bed liner reconditioned. I can move to $29,000 today.",
+    sentAt: hoursAgo(3),
+    read: true,
+    attachedOfferId: null,
+  },
+  {
+    id: "dmsg_f4",
+    threadId: "dthr_f150",
+    authorType: "seller",
+    authorName: "Seller",
+    body: "Let's split it. $29,400 and I'll accept this afternoon so you can schedule pickup before the weekend.",
+    sentAt: minutesAgo(18),
+    read: false,
+    attachedOfferId: null,
+  },
+
+  /* -------------------------------------------------------- outbid note */
+  {
+    id: "dmsg_t1",
+    threadId: "dthr_waymore_outbid",
+    authorType: "waymore",
+    authorName: "Way More",
+    body: "Another dealer has bid above you on the 2022 Kia Telluride SX. The current high bid is $37,400. Bidding is still open if you'd like to respond.",
+    sentAt: hoursAgo(2),
+    read: false,
+    attachedOfferId: null,
+  },
+
+  /* ------------------------------------------------------ seller question */
+  {
+    id: "dmsg_r1",
+    threadId: "dthr_rav4",
+    authorType: "dealer",
+    authorName: "You — Dealer Kia",
+    body: "Is the hybrid battery service history available for this one, and has it ever been out of state?",
+    sentAt: hoursAgo(11),
+    read: true,
+    attachedOfferId: null,
+  },
+  {
+    id: "dmsg_r2",
+    threadId: "dthr_rav4",
+    authorType: "seller",
+    authorName: "Seller",
+    body: "Dealer serviced every 5,000 miles since new, all at the same Toyota store. Missouri its whole life, never registered anywhere else.",
+    sentAt: hoursAgo(9),
+    read: true,
+    attachedOfferId: null,
+  },
+
+  /* ------------------------------------------------------------- payment */
+  {
+    id: "dmsg_tc1",
+    threadId: "dthr_waymore_tacoma",
+    authorType: "waymore",
+    authorName: "Way More",
+    body: "Payment for the 2019 Toyota Tacoma TRD Off-Road has cleared and the title is on its way. Invoice WM-10428 is available in Purchases.",
+    sentAt: daysAgo(7),
+    read: true,
+    attachedOfferId: null,
+  },
+];
+
+export const dealerMessagesForThread = (threadId: string) =>
+  dealerMessages
+    .filter((m) => m.threadId === threadId)
+    .sort((a, b) => new Date(a.sentAt).getTime() - new Date(b.sentAt).getTime());
+
+export const dealerThreadById = (id: string) => dealerThreads.find((t) => t.id === id);
+
+export const bidById = (id: string) => bids.find((b) => b.id === id);
+
 /* ======================================================= payout & pickup */
 
 export const payoutTracker: PayoutTracker = {

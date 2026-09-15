@@ -193,6 +193,8 @@ export interface Message {
   read: boolean;
   /** Renders the rich offer card inside the thread. */
   attachedOfferId: string | null;
+  /** Renders the bid summary card inside the thread (dealer side). */
+  attachedBidId?: string | null;
 }
 
 export interface Thread {
@@ -200,12 +202,18 @@ export interface Thread {
   participantName: string;
   participantType: ThreadParty;
   dealerId: string | null;
+  /** Set on dealer-side threads. Sellers stay anonymous to dealers until an
+   *  offer is accepted, so this is used for lookups, never for display. */
+  sellerId?: string | null;
   vehicleId: string;
   subject: string;
   lastMessageAt: string;
   unreadCount: number;
   /** "new" | "info" | none — the coloured dot in the thread list. */
   flag: "new" | "info" | null;
+  /** Present when the other party has countered and this thread is waiting
+   *  on the viewer to accept, counter back, or decline. */
+  pendingCounter?: { amount: number; expiresAt: string } | null;
 }
 
 /* ------------------------------------------------------- payout & pickup */
