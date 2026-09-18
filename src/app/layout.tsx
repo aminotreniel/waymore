@@ -1,3 +1,4 @@
+import { AuctionProvider } from "@/context/AuctionContext";
 import type { Metadata, Viewport } from "next";
 import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
@@ -41,9 +42,17 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="en" className={`${poppins.variable} ${inter.variable}`}>
+    <html
+      data-scroll-behavior="smooth"
+      lang="en"
+      className={`${poppins.variable} ${inter.variable}`}
+    >
       {/*
         suppressHydrationWarning is scoped to <body> only. Browser extensions
         (Grammarly, password managers, ad blockers) inject attributes onto
@@ -60,10 +69,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           Skip to content
         </a>
-        <SessionProvider initialSaved={savedVehicleIds}>
-          {children}
-          <DemoSwitcher />
-        </SessionProvider>
+        <AuctionProvider>
+          <SessionProvider initialSaved={savedVehicleIds}>
+            {children}
+            <DemoSwitcher />
+          </SessionProvider>
+        </AuctionProvider>
       </body>
     </html>
   );

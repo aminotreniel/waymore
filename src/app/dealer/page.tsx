@@ -5,9 +5,9 @@ import { useState } from "react";
 import { Card, CardHeader } from "@/components/ui/Card";
 import { ButtonLink } from "@/components/ui/Button";
 import { Tabs } from "@/components/ui/Disclosure";
-import { Countdown } from "@/components/ui/Countdown";
+import { useAuctions } from "@/context/AuctionContext";
 import { VehicleCard } from "@/components/vehicle/VehicleCard";
-import { ActivityFeed } from "@/components/portal/ActivityFeed";
+
 import { ScriptMark } from "@/components/brand/ScriptMark";
 import { LinkRow, TrustItem } from "@/components/ui/Misc";
 import {
@@ -24,9 +24,7 @@ import {
   IconTrophy,
 } from "@/components/icons";
 import { useSession } from "@/context/SessionContext";
-import { listedVehicles } from "@/lib/data/vehicles";
-import { bidsForDealer, currentEvent, dealerActivity } from "@/lib/data/marketplace";
-import { CURRENT_EVENT_CLOSES_AT, eventDeadlineLabel } from "@/lib/data/clock";
+
 import { marketingImages } from "@/lib/images";
 
 const TABS = [
@@ -44,9 +42,16 @@ export default function DealerDashboard() {
   const [tab, setTab] = useState("all");
   const [query, setQuery] = useState("");
 
-  const myBids = bidsForDealer(dealer.id);
-  const active = myBids.filter((b) => ["active", "winning", "outbid"].includes(b.status));
-  const winning = myBids.filter((b) => b.status === "winning");
+  const { data } = useAuctions();
+  const listedVehicles = data.vehicles;
+  const active = data.my_bids.filter((b) =>
+    data.auctions.some((a) => a.id === b.auction_id && a.status === "open"),
+  );
+  const winning = active.filter((b) =>
+    data.auctions.some(
+      (a) => a.id === b.auction_id && a.high_is_mine,
+    ),
+  );
 
   const filtered = listedVehicles
     .filter((v) =>
@@ -57,7 +62,9 @@ export default function DealerDashboard() {
           : v.bodyStyle === tab,
     )
     .filter((v) =>
-      `${v.year} ${v.make} ${v.model} ${v.trim}`.toLowerCase().includes(query.toLowerCase()),
+      `${v.year} ${v.make} ${v.model} ${v.trim}`
+        .toLowerCase()
+        .includes(query.toLowerCase()),
     );
 
   const counts = {
@@ -78,7 +85,7 @@ export default function DealerDashboard() {
               src={marketingImages.dealerLot}
               alt=""
               fill
-              sizes="100vw"
+              sizes="(min-width: 1280px) 65vw, 100vw"
               className="object-cover object-[65%_center]"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-ink-950 via-ink-950/92 to-ink-950/30" />
@@ -101,9 +108,24 @@ export default function DealerDashboard() {
               </div>
 
               <div className="mt-7 grid gap-5 sm:grid-cols-3 max-w-2xl">
-                <TrustItem tone="light" icon={<IconCar size={24} />} title="Local Inventory" sub="Sourced from real sellers in your area." />
-                <TrustItem tone="light" icon={<IconDollarCircle size={24} />} title="No Fees" sub="No membership fees. No subscriptions." />
-                <TrustItem tone="light" icon={<IconClock size={24} />} title="Competitive Bidding" sub="Transparent, timed dealer events." />
+                <TrustItem
+                  tone="light"
+                  icon={<IconCar size={24} />}
+                  title="Local Inventory"
+                  sub="Sourced from real sellers in your area."
+                />
+                <TrustItem
+                  tone="light"
+                  icon={<IconDollarCircle size={24} />}
+                  title="No Fees"
+                  sub="No membership fees. No subscriptions."
+                />
+                <TrustItem
+                  tone="light"
+                  icon={<IconClock size={24} />}
+                  title="Competitive Bidding"
+                  sub="Transparent, timed dealer events."
+                />
               </div>
             </div>
           </section>
@@ -116,15 +138,21 @@ export default function DealerDashboard() {
                   <IconCalendar size={22} />
                 </span>
                 <div>
-                  <p className="text-[15.5px] font-bold text-heading">This Week&apos;s Dealer Event</p>
+                  <p className="text-[15.5px] font-bold text-heading">
+                    This Week&apos;s Dealer Event
+                  </p>
                   <p className="text-[13px] text-body mt-0.5">
-                    Bidding ends {eventDeadlineLabel(CURRENT_EVENT_CLOSES_AT)}
+                    Each vehicle closes independently, with automatic time
+                    extensions.
                   </p>
                 </div>
               </div>
               <div className="flex items-center gap-6">
-                <Countdown to={CURRENT_EVENT_CLOSES_AT} />
-                <ButtonLink href="/dealer/inventory" withArrow className="!rounded-full">
+                <ButtonLink
+                  href="/dealer/inventory"
+                  withArrow
+                  className="!rounded-full"
+                >
                   View All Vehicles
                 </ButtonLink>
               </div>
@@ -141,7 +169,10 @@ export default function DealerDashboard() {
               />
               <div className="flex items-center gap-2.5 pb-3">
                 <div className="relative">
-                  <IconSearch size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+                  <IconSearch
+                    size={15}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-muted"
+                  />
                   <input
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
@@ -150,7 +181,11 @@ export default function DealerDashboard() {
                     className="h-9 w-[260px] max-w-full rounded-lg bg-paper pl-9 pr-3 text-[13px] text-heading placeholder:text-muted ring-1 ring-inset ring-transparent focus:ring-ink-600 focus:outline-none"
                   />
                 </div>
-                <ButtonLink href="/dealer/inventory" variant="outline" size="sm">
+                <ButtonLink
+                  href="/dealer/inventory"
+                  variant="outline"
+                  size="sm"
+                >
                   Filters
                 </ButtonLink>
               </div>
@@ -178,15 +213,25 @@ export default function DealerDashboard() {
           <Card>
             <CardHeader
               title="My Activity"
-              action={
-                <LinkRow href="/dealer/bids">View All</LinkRow>
-              }
+              action={<LinkRow href="/dealer/bids">View All</LinkRow>}
             />
             <ul className="space-y-3.5">
               {[
-                { icon: <IconGavel size={17} />, v: active.length, l: "Active Bids" },
-                { icon: <IconShieldCheck size={17} />, v: winning.length, l: "Winning Bids (This Month)" },
-                { icon: <IconHeart size={17} />, v: savedVehicles.length, l: "Vehicles Saved" },
+                {
+                  icon: <IconGavel size={17} />,
+                  v: active.length,
+                  l: "Active Bids",
+                },
+                {
+                  icon: <IconShieldCheck size={17} />,
+                  v: winning.length,
+                  l: "Currently leading",
+                },
+                {
+                  icon: <IconHeart size={17} />,
+                  v: savedVehicles.length,
+                  l: "Vehicles Saved",
+                },
               ].map((s) => (
                 <li key={s.l} className="flex items-center gap-3">
                   <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-mint-50 text-ink-700">
@@ -196,7 +241,9 @@ export default function DealerDashboard() {
                     <span className="block font-display font-extrabold text-[19px] text-heading leading-none tabular-nums">
                       {s.v}
                     </span>
-                    <span className="block text-[12.5px] text-muted mt-0.5">{s.l}</span>
+                    <span className="block text-[12.5px] text-muted mt-0.5">
+                      {s.l}
+                    </span>
                   </span>
                 </li>
               ))}
@@ -205,7 +252,11 @@ export default function DealerDashboard() {
 
           <Card>
             <CardHeader title="Recent Activity" />
-            <ActivityFeed items={dealerActivity.slice(0, 5)} dense />
+            <p className="text-sm text-muted">
+              {data.my_bids.length
+                ? `${data.my_bids.length} auction rounds with your bids. Open My Bids to follow your position.`
+                : "No bids yet. Choose a vehicle to join the auction."}
+            </p>
           </Card>
 
           <Card>
@@ -214,12 +265,21 @@ export default function DealerDashboard() {
                 <IconPhone size={19} />
               </span>
               <div>
-                <p className="text-[14.5px] font-semibold text-heading">Need Help?</p>
-                <p className="text-[12.5px] text-muted mt-0.5">Our team is here to help.</p>
+                <p className="text-[14.5px] font-semibold text-heading">
+                  Need Help?
+                </p>
+                <p className="text-[12.5px] text-muted mt-0.5">
+                  Our team is here to help.
+                </p>
               </div>
             </div>
             <div className="mt-4 space-y-2">
-              <ButtonLink href="/dealer/support" variant="dark" fullWidth size="sm">
+              <ButtonLink
+                href="/dealer/support"
+                variant="dark"
+                fullWidth
+                size="sm"
+              >
                 Contact Support
               </ButtonLink>
               <a
@@ -228,7 +288,9 @@ export default function DealerDashboard() {
               >
                 Call 314-555-0123
               </a>
-              <p className="text-center text-[12px] text-muted pt-1">Mon – Fri: 8am – 6pm CT</p>
+              <p className="text-center text-[12px] text-muted pt-1">
+                Mon – Fri: 8am – 6pm CT
+              </p>
             </div>
           </Card>
 
@@ -236,10 +298,15 @@ export default function DealerDashboard() {
             <div className="flex items-start gap-2.5">
               <IconChart size={20} className="shrink-0 mt-0.5 text-lime-600" />
               <div>
-                <p className="text-[14px] font-bold text-heading">Quality inventory.</p>
-                <p className="text-[14px] font-bold text-heading">Real opportunities.</p>
+                <p className="text-[14px] font-bold text-heading">
+                  Quality inventory.
+                </p>
+                <p className="text-[14px] font-bold text-heading">
+                  Real opportunities.
+                </p>
                 <p className="mt-1.5 text-[12.5px] leading-relaxed text-body">
-                  Way More connects you with motivated sellers and great vehicles in your market.
+                  Way More connects you with motivated sellers and great
+                  vehicles in your market.
                 </p>
               </div>
             </div>
@@ -249,8 +316,10 @@ export default function DealerDashboard() {
             <div className="flex items-center gap-2.5">
               <IconTrophy size={20} className="text-warn shrink-0" />
               <p className="text-[13px] text-body">
-                <strong className="text-heading">{currentEvent.registeredDealers} dealers</strong>{" "}
-                registered for this event.
+                <strong className="text-heading">
+                  {data.vehicles.length} vehicles
+                </strong>{" "}
+                available in this demonstration.
               </p>
             </div>
           </Card>

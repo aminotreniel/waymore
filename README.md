@@ -4,10 +4,14 @@ A complete, production-shaped front end for the Way More automotive marketplace:
 a consumer site, a guided seller funnel, and three signed-in portals (seller,
 dealer, admin).
 
-**This build is front end only.** Every screen is wired to a typed in-memory
-fixture layer rather than an API. Nothing persists across a refresh. The data
-shapes were designed to match what the backend will return, so replacing the
-fixtures with real fetches should not require component changes.
+**The dealer timed-auction flow now uses Supabase.** Authentication, persistent
+bid history, concurrent bidding, server deadlines, anti-sniping, real-time updates,
+and automatic closing are implemented. See [AUCTION.md](./AUCTION.md) for setup,
+demo instructions, architecture, validation, and remaining production work.
+
+The remaining marketing, seller, messaging, purchases, and general admin screens
+are frontend design prototypes. The sections below describe that original UI
+foundation; its mock workflows are separate from the live auction flow.
 
 ---
 

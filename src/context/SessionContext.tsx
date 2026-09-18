@@ -1,6 +1,14 @@
 "use client";
 
-import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
+import { useAuctions } from "@/context/AuctionContext";
 import type { Role } from "@/lib/types";
 import { adminUsers, dealers, sellers } from "@/lib/data/people";
 
@@ -39,23 +47,35 @@ export function SessionProvider({
   initialRole?: Role;
   initialSaved?: string[];
 }) {
+  const { data: auctionData } = useAuctions();
   const [role, setRole] = useState<Role>(initialRole);
   const [savedVehicles, setSavedVehicles] = useState<string[]>(initialSaved);
 
   const toggleSaved = useCallback((vehicleId: string) => {
     setSavedVehicles((prev) =>
-      prev.includes(vehicleId) ? prev.filter((v) => v !== vehicleId) : [vehicleId, ...prev],
+      prev.includes(vehicleId)
+        ? prev.filter((v) => v !== vehicleId)
+        : [vehicleId, ...prev],
     );
   }, []);
 
   const value = useMemo<SessionValue>(() => {
     const seller = sellers[0];
-    const dealer = dealers[0];
+    const dealer =
+      dealers.find((d) => d.id === auctionData.dealer_id) ?? dealers[0];
     const admin = adminUsers[0];
     const displayName =
-      role === "seller" ? `${seller.firstName} ${seller.lastName}` : role === "dealer" ? dealer.name : admin.name;
+      role === "seller"
+        ? `${seller.firstName} ${seller.lastName}`
+        : role === "dealer"
+          ? dealer.name
+          : admin.name;
     const initials =
-      role === "seller" ? seller.avatarInitials : role === "dealer" ? dealer.markInitials : admin.avatarInitials;
+      role === "seller"
+        ? seller.avatarInitials
+        : role === "dealer"
+          ? dealer.markInitials
+          : admin.avatarInitials;
     return {
       role,
       setRole,
@@ -68,9 +88,11 @@ export function SessionProvider({
       toggleSaved,
       isSaved: (id: string) => savedVehicles.includes(id),
     };
-  }, [role, savedVehicles, toggleSaved]);
+  }, [role, savedVehicles, toggleSaved, auctionData.dealer_id]);
 
-  return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;
+  return (
+    <SessionContext.Provider value={value}>{children}</SessionContext.Provider>
+  );
 }
 
 export function useSession() {

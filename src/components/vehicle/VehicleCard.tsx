@@ -6,15 +6,17 @@ import type { Vehicle } from "@/lib/types";
 import { Badge } from "@/components/ui/Badge";
 import { IconHeart } from "@/components/icons";
 import { useSession } from "@/context/SessionContext";
-import { highBidFor } from "@/lib/data/marketplace";
-import { currentEvent } from "@/lib/data/marketplace";
+import { useAuctions } from "@/context/AuctionContext";
+import { AuctionTimer } from "@/components/auction/AuctionTimer";
+import { currentRound } from "@/lib/auction";
+
 import { cx, miles, money, vehicleShortTitle } from "@/lib/format";
-import { Time } from "@/components/ui/Time";
 
 export function VehicleCard({ vehicle }: { vehicle: Vehicle }) {
   const { isSaved, toggleSaved } = useSession();
   const saved = isSaved(vehicle.id);
-  const top = highBidFor(vehicle.id);
+  const { data } = useAuctions();
+  const auction = currentRound(data.auctions, vehicle.id);
 
   return (
     <article className="group relative flex flex-col overflow-hidden rounded-2xl bg-surface ring-1 ring-line shadow-card transition-shadow hover:shadow-lift">
@@ -28,7 +30,10 @@ export function VehicleCard({ vehicle }: { vehicle: Vehicle }) {
         />
         {vehicle.tag && (
           <span className="absolute left-3 top-3">
-            <Badge tone="lime" className="!bg-lime-400 !text-ink-950 !ring-0 shadow-card">
+            <Badge
+              tone="lime"
+              className="!bg-lime-400 !text-ink-950 !ring-0 shadow-card"
+            >
               {vehicle.tag}
             </Badge>
           </span>
@@ -36,7 +41,11 @@ export function VehicleCard({ vehicle }: { vehicle: Vehicle }) {
         <button
           onClick={() => toggleSaved(vehicle.id)}
           aria-pressed={saved}
-          aria-label={saved ? `Remove ${vehicleShortTitle(vehicle)} from saved` : `Save ${vehicleShortTitle(vehicle)}`}
+          aria-label={
+            saved
+              ? `Remove ${vehicleShortTitle(vehicle)} from saved`
+              : `Save ${vehicleShortTitle(vehicle)}`
+          }
           className={cx(
             "absolute right-3 top-3 grid size-9 place-items-center rounded-full backdrop-blur transition-colors",
             saved
@@ -50,7 +59,10 @@ export function VehicleCard({ vehicle }: { vehicle: Vehicle }) {
 
       <div className="flex flex-1 flex-col p-4">
         <h3 className="text-[15.5px] leading-snug">
-          <Link href={`/dealer/inventory/${vehicle.id}`} className="after:absolute after:inset-0">
+          <Link
+            href={`/dealer/inventory/${vehicle.id}`}
+            className="after:absolute after:inset-0"
+          >
             {vehicleShortTitle(vehicle)} {vehicle.trim}
           </Link>
         </h3>
@@ -59,7 +71,11 @@ export function VehicleCard({ vehicle }: { vehicle: Vehicle }) {
         </p>
 
         <div className="mt-2.5 flex flex-wrap gap-1.5">
-          {vehicle.titleStatus === "clean" && <Badge tone="neutral" dot>Clean Title</Badge>}
+          {vehicle.titleStatus === "clean" && (
+            <Badge tone="neutral" dot>
+              Clean Title
+            </Badge>
+          )}
           {vehicle.owners === 1 && <Badge tone="neutral">1 Owner</Badge>}
           {["AWD", "4x4"].includes(vehicle.drivetrain) && (
             <Badge tone="neutral">{vehicle.drivetrain}</Badge>
@@ -70,16 +86,21 @@ export function VehicleCard({ vehicle }: { vehicle: Vehicle }) {
           <div>
             <p className="text-[11px] text-muted">Current High Bid</p>
             <p className="font-display font-bold text-[17px] text-heading leading-tight tabular-nums">
-              {top ? money(top.amount) : "No bids yet"}
+              {auction?.high_bid_cents
+                ? money(auction.high_bid_cents / 100)
+                : "No bids yet"}
             </p>
           </div>
           <div className="text-right">
             <p className="text-[11px] text-muted">Time Left</p>
-            <Time
-              iso={currentEvent.closesAt}
-              format="countdown"
-              className="block font-display font-bold text-[17px] text-heading leading-tight tabular-nums"
-            />
+            {auction ? (
+              <AuctionTimer
+                auction={auction}
+                className="block text-[17px] text-heading"
+              />
+            ) : (
+              <span>Not scheduled</span>
+            )}
           </div>
           <span className="relative z-10 inline-flex h-9 items-center rounded-lg bg-white px-3 text-[12.5px] font-display font-semibold text-ink-900 ring-1 ring-inset ring-line-strong transition-colors group-hover:bg-ink-900 group-hover:text-white group-hover:ring-ink-900">
             View Details

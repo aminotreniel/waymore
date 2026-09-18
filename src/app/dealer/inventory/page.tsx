@@ -6,14 +6,12 @@ import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { PortalHeader } from "@/components/portal/PortalShell";
 import { Tabs } from "@/components/ui/Disclosure";
-import { Countdown } from "@/components/ui/Countdown";
+import { useAuctions } from "@/context/AuctionContext";
 import { VehicleCard } from "@/components/vehicle/VehicleCard";
 import { Checkbox, Select } from "@/components/ui/Field";
 import { EmptyState } from "@/components/ui/Misc";
 import { IconCar, IconFilter, IconSearch, IconX } from "@/components/icons";
-import { listedVehicles } from "@/lib/data/vehicles";
-import { highBidFor } from "@/lib/data/marketplace";
-import { CURRENT_EVENT_CLOSES_AT } from "@/lib/data/clock";
+
 import { cx, money } from "@/lib/format";
 
 const BODY_TABS = [
@@ -34,6 +32,8 @@ const SORTS = [
 ];
 
 export default function DealerInventoryPage() {
+  const { data } = useAuctions();
+  const listedVehicles = data.vehicles;
   const [tab, setTab] = useState("all");
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState("ending");
@@ -43,12 +43,26 @@ export default function DealerInventoryPage() {
   const [maxMiles, setMaxMiles] = useState("any");
   const [maxBid, setMaxBid] = useState("any");
 
-  const toggle = (list: string[], setList: (v: string[]) => void, value: string) =>
-    setList(list.includes(value) ? list.filter((v) => v !== value) : [...list, value]);
+  const toggle = (
+    list: string[],
+    setList: (v: string[]) => void,
+    value: string,
+  ) =>
+    setList(
+      list.includes(value) ? list.filter((v) => v !== value) : [...list, value],
+    );
 
   const results = useMemo(() => {
+    const highBidFor = (id: string) => {
+      const a = data.auctions.find((a) => a.vehicle_id === id);
+      return a?.high_bid_cents ? { amount: a.high_bid_cents / 100 } : null;
+    };
     let out = listedVehicles.filter((v) =>
-      tab === "all" ? true : tab === "luxury" ? LUXURY.includes(v.make) : v.bodyStyle === tab,
+      tab === "all"
+        ? true
+        : tab === "luxury"
+          ? LUXURY.includes(v.make)
+          : v.bodyStyle === tab,
     );
 
     if (query.trim()) {
@@ -59,9 +73,11 @@ export default function DealerInventoryPage() {
           .includes(q),
       );
     }
-    if (drivetrains.length) out = out.filter((v) => drivetrains.includes(v.drivetrain));
+    if (drivetrains.length)
+      out = out.filter((v) => drivetrains.includes(v.drivetrain));
     if (titles.length) out = out.filter((v) => titles.includes(v.titleStatus));
-    if (maxMiles !== "any") out = out.filter((v) => v.mileage <= Number(maxMiles));
+    if (maxMiles !== "any")
+      out = out.filter((v) => v.mileage <= Number(maxMiles));
     if (maxBid !== "any") {
       out = out.filter((v) => {
         const b = highBidFor(v.id);
@@ -72,19 +88,49 @@ export default function DealerInventoryPage() {
     const bid = (id: string) => highBidFor(id)?.amount ?? 0;
     return [...out].sort((a, b) => {
       switch (sort) {
-        case "bid-desc": return bid(b.id) - bid(a.id);
-        case "bid-asc": return bid(a.id) - bid(b.id);
-        case "miles": return a.mileage - b.mileage;
-        case "newest": return b.year - a.year;
-        default: return b.bidCount - a.bidCount;
+        case "bid-desc":
+          return bid(b.id) - bid(a.id);
+        case "bid-asc":
+          return bid(a.id) - bid(b.id);
+        case "miles":
+          return a.mileage - b.mileage;
+        case "newest":
+          return b.year - a.year;
+        default:
+          return (
+            Date.parse(
+              data.auctions.find((x) => x.vehicle_id === a.id)?.ends_at ?? "",
+            ) -
+            Date.parse(
+              data.auctions.find((x) => x.vehicle_id === b.id)?.ends_at ?? "",
+            )
+          );
       }
     });
-  }, [tab, query, sort, drivetrains, titles, maxMiles, maxBid]);
+  }, [
+    tab,
+    query,
+    sort,
+    drivetrains,
+    titles,
+    maxMiles,
+    maxBid,
+    data.auctions,
+    listedVehicles,
+  ]);
 
-  const activeFilters = drivetrains.length + titles.length + (maxMiles !== "any" ? 1 : 0) + (maxBid !== "any" ? 1 : 0);
+  const activeFilters =
+    drivetrains.length +
+    titles.length +
+    (maxMiles !== "any" ? 1 : 0) +
+    (maxBid !== "any" ? 1 : 0);
 
   const clearAll = () => {
-    setDrivetrains([]); setTitles([]); setMaxMiles("any"); setMaxBid("any"); setQuery("");
+    setDrivetrains([]);
+    setTitles([]);
+    setMaxMiles("any");
+    setMaxBid("any");
+    setQuery("");
   };
 
   return (
@@ -94,8 +140,10 @@ export default function DealerInventoryPage() {
         lead="Every vehicle in this week's event, sourced directly from local sellers."
         action={
           <div className="flex items-center gap-4 rounded-2xl bg-surface ring-1 ring-line shadow-card px-5 py-3">
-            <span className="text-[12.5px] font-semibold text-muted">Bidding ends in</span>
-            <Countdown to={CURRENT_EVENT_CLOSES_AT} size="sm" />
+            <span className="text-[12.5px] font-semibold text-muted">
+              Individual vehicle timers
+            </span>
+            <span className="text-sm font-semibold">Live</span>
           </div>
         }
       />
@@ -105,7 +153,10 @@ export default function DealerInventoryPage() {
           <Tabs tabs={BODY_TABS} active={tab} onChange={setTab} />
           <div className="flex flex-wrap items-center gap-2.5 pb-3">
             <div className="relative">
-              <IconSearch size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+              <IconSearch
+                size={15}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-muted"
+              />
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
@@ -208,10 +259,18 @@ export default function DealerInventoryPage() {
                 <span className="text-[12.5px] text-muted">Active:</span>
                 <div className="flex flex-wrap gap-2">
                   {[...drivetrains, ...titles].map((f) => (
-                    <Badge key={f} tone="ink">{f}</Badge>
+                    <Badge key={f} tone="ink">
+                      {f}
+                    </Badge>
                   ))}
-                  {maxMiles !== "any" && <Badge tone="ink">Under {Number(maxMiles).toLocaleString()} mi</Badge>}
-                  {maxBid !== "any" && <Badge tone="ink">Under {money(Number(maxBid))}</Badge>}
+                  {maxMiles !== "any" && (
+                    <Badge tone="ink">
+                      Under {Number(maxMiles).toLocaleString()} mi
+                    </Badge>
+                  )}
+                  {maxBid !== "any" && (
+                    <Badge tone="ink">Under {money(Number(maxBid))}</Badge>
+                  )}
                 </div>
                 <button
                   onClick={clearAll}
@@ -227,7 +286,8 @@ export default function DealerInventoryPage() {
 
         <div className="p-4 sm:p-5">
           <p className="mb-4 text-[13px] text-muted">
-            Showing <strong className={cx("text-heading")}>{results.length}</strong> of{" "}
+            Showing{" "}
+            <strong className={cx("text-heading")}>{results.length}</strong> of{" "}
             {listedVehicles.length} vehicles
           </p>
 
@@ -236,7 +296,11 @@ export default function DealerInventoryPage() {
               icon={<IconCar size={22} />}
               title="No vehicles match those filters"
               body="Try widening your mileage or bid range, or clearing the title filters."
-              action={<Button variant="outline" size="sm" onClick={clearAll}>Clear filters</Button>}
+              action={
+                <Button variant="outline" size="sm" onClick={clearAll}>
+                  Clear filters
+                </Button>
+              }
             />
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
