@@ -13,3 +13,7 @@ next-env.d.ts
 
 # Local demo credentials and scratch files
 work/
+
+# Python bytecode
+__pycache__/
+*.pyc

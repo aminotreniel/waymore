@@ -1,202 +1,104 @@
-# Way More — front end
+# Way More
 
-A complete, production-shaped front end for the Way More automotive marketplace:
-a consumer site, a guided seller funnel, and three signed-in portals (seller,
-dealer, admin).
+Way More is a used-vehicle marketplace. Private sellers submit a car, and approved
+dealers compete for it in a weekly timed auction. This repository has:
 
-**The dealer timed-auction flow now uses Supabase.** Authentication, persistent
-bid history, concurrent bidding, server deadlines, anti-sniping, real-time updates,
-and automatic closing are implemented. See [AUCTION.md](./AUCTION.md) for setup,
-demo instructions, architecture, validation, and remaining production work.
+- a **consumer site** and a guided **seller funnel** (`/`, `/sell`)
+- three signed-in portals: **seller** (`/seller`), **dealer** (`/dealer`), **admin** (`/admin`)
+- a **timed dealer auction** backed by Supabase (PostgreSQL + Auth + Realtime + pg_cron)
 
-The remaining marketing, seller, messaging, purchases, and general admin screens
-are frontend design prototypes. The sections below describe that original UI
-foundation; its mock workflows are separate from the live auction flow.
+Built with Next.js 16 (App Router), React 19, TypeScript (strict), Tailwind CSS v4 and
+Supabase.
 
----
+## What is real and what is a prototype
 
-## Running it
+| Area | Status | Where it lives |
+|---|---|---|
+| Dealer timed auction: bidding, deadlines, anti-sniping, closing, outcomes | **Live backend** (Supabase) | `supabase/migrations`, `src/context/AuctionContext.tsx`, `src/components/auction/` |
+| Dealer sign-in, dealer ↔ account membership, admin role | **Live backend** (Supabase Auth + trusted tables) | `dealer_memberships`, `auction_admins`, `src/components/auction/AuctionAccess.tsx` |
+| Real-time sync between dealers | **Live** (Supabase Realtime + re-reads from the DB) | `src/context/AuctionContext.tsx` |
+| Auction lab (concurrency / timing test harness, admin only) | **Live, demo tooling** | `src/app/dealer/lab`, `src/app/api/lab`, `src/lib/lab/` |
+| Seller funnel, seller portal, admin portal, messages, offers, purchases, payouts | **Front-end prototype** on fixture data | `src/app/sell`, `src/app/seller`, `src/app/admin`, `src/lib/data/` |
+
+The seller and admin portals are fully designed and clickable, but they read from
+fixtures in `src/lib/data`, not from the database. Nothing they do is saved yet.
+[docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) explains how they would connect to the
+auction tables.
+
+## Quick start
+
+You need **Node 20+**, a **Supabase project** and the **Supabase CLI**.
 
 ```bash
 npm install
-npm run dev          # http://localhost:3000
+cp .env.example .env.local        # fill in your Supabase URL + publishable key
+supabase login
+supabase link --project-ref <your-project-ref>
+supabase db push                  # applies supabase/migrations
+npx tsx --env-file=.env.local scripts/seed-auctions.ts   # vehicles, auctions, 3 demo dealers
+npm run dev                       # http://localhost:3000
 ```
 
-Other scripts:
+Then open <http://localhost:3000/dealer>. **[docs/SETUP.md](./docs/SETUP.md)** has
+the full walkthrough, including the demo-login and auction-lab settings, running the
+tests, deployment and troubleshooting.
 
-```bash
-npm run build        # production build
-npm run typecheck    # tsc --noEmit
-npm run lint         # eslint
-npm run fetch:images # re-download the placeholder photography
-```
+## Documentation
 
-Requires Node 20+.
-
----
-
-## Stack
-
-| | |
+| Doc | Read it for |
 |---|---|
-| Framework | Next.js 16 (App Router, Turbopack) |
-| Language | TypeScript (strict) |
-| Styling | Tailwind CSS v4 — tokens defined in `src/app/globals.css` |
-| Fonts | Poppins (display) + Inter (body), self-hosted via `next/font` |
-| Icons | Hand-built SVG set, `src/components/icons` |
-| State | React context — no external state library |
+| [docs/SETUP.md](./docs/SETUP.md) | Setting up and running the project from scratch |
+| [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) | Developer handoff: database, where bids are stored, how the high bidder is chosen, sync, server code, demo vs. production |
+| [AUCTION.md](./AUCTION.md) | In-depth notes on the auction engine: guarantees, security model, validation, auction lab |
+| [docs/FRONTEND.md](./docs/FRONTEND.md) | UI layer: routes, components, design tokens, imagery, fixtures |
 
-No UI kit. Every component in `src/components/ui` is purpose-built for this
-design so nothing has to be fought or overridden later.
-
----
-
-## The four surfaces
-
-**Consumer site** — `/`
-`/how-it-works` · `/why-way-more` · `/faqs` · `/about`
-
-**Seller funnel** — `/sell`
-Vehicle details → condition → estimate → account → photos → review →
-confirmation. Answers live in `SellFlowContext` and survive navigation between
-steps. The estimate recalculates live from the answers
-(`priceEstimate()` in `src/context/SellFlowContext.tsx`) — a stand-in for the
-pricing service, using the same inputs the real model will.
-
-**Seller portal** — `/seller`
-Dashboard · My Vehicle · Offers (list + detail with working accept / counter /
-decline) · Messages (thread view with the rich in-thread offer card) ·
-Payout & Pickup · Account Settings
-
-**Dealer portal** — `/dealer`
-Dashboard · This Week's Event · Browse Inventory (search, tabs, multi-facet
-filters, sorting) · Vehicle Detail with a working bid dialog · My Bids ·
-Purchases · Saved Vehicles · Profile · Help & Support
-
-**Admin portal** — `/admin`
-Overview · Approval Queue (approve / reject flows through a live queue) ·
-Vehicles · Events · Offers & Sales · Dealers · Sellers · Settings
-
-A floating **Prototype** control sits bottom-right for jumping between the four
-surfaces without hunting for URLs. It is a prototype-only affordance — delete
-`src/components/portal/DemoSwitcher.tsx` and its mount in `src/app/layout.tsx`
-when real auth lands.
-
----
-
-## Project layout
+## Repository layout
 
 ```
+supabase/
+  migrations/            database schema, RLS policies, SQL functions, cron jobs (run in order)
+  config.toml            Supabase CLI config
+scripts/
+  seed-auctions.ts       seeds dealers, vehicles, an event + auctions, and 3 demo accounts
+  test-auctions.ts       integration tests against a real Supabase project
+  fetch_images.py        re-downloads the openly licensed placeholder photos
 src/
   app/
-    (marketing)/       consumer site — shares a header/footer layout
-    sell/              seller funnel, wrapped in SellFlowProvider
-    seller/            seller portal   ─┐
-    dealer/            dealer portal    ├─ all three share PortalShell
-    admin/             admin console   ─┘
-  components/
-    brand/             logo, script mark, dealer monograms, avatars
-    ui/                Button, Card, Badge, Field, Modal, Tabs, Accordion,
-                       Countdown, Timeline, DataTable primitives…
-    icons/             the full SVG icon set
-    marketing/         site header/footer and the reusable page sections
-    portal/            PortalShell, DataTable, ActivityFeed, OfferCard
-    vehicle/           VehicleCard, VehicleGallery
+    (marketing)/         consumer site
+    sell/                seller funnel (prototype)
+    seller/              seller portal (prototype)
+    dealer/              dealer portal: inventory, event, bids = live auction; lab = test harness
+    admin/               admin console (prototype)
+    api/demo-login/      server route: one-click demo sign-in (demo only)
+    api/lab/             server route: auction lab runner (admin only, demo only)
   context/
-    SessionContext     stands in for auth — who is signed in, saved vehicles
-    SellFlowContext    the funnel's draft-listing state
+    AuctionContext.tsx   auction session, lobby data, Realtime subscription, server clock
+    SessionContext.tsx   prototype session for the non-auction screens
+    SellFlowContext.tsx  seller funnel draft state
+  components/
+    auction/             sign-in, bid panel, timer
+    portal/ ui/ ...      shared UI
   lib/
-    types.ts           the domain model (Vehicle, Offer, Bid, Event, …)
-    format.ts          money / mileage / date / countdown formatting
-    images.ts          every photo path in the product, in one file
-    data/              the fixtures
+    auction.ts           auction types + helpers (minimum bid, labels, formatting)
+    supabase/client.ts   browser Supabase client (publishable key only)
+    lab/                 auction lab scenarios
+    data/                fixtures used by the prototype screens
 ```
 
-### Design tokens
+## Scripts
 
-All colour, type, elevation and motion tokens live in one `@theme` block at the
-top of `src/app/globals.css`. Changing the brand is editing that block — no
-component hunts. Tailwind v4 needs no `tailwind.config.js`.
+```bash
+npm run dev          # dev server
+npm run build        # production build
+npm run start        # serve the production build
+npm run typecheck    # tsc --noEmit
+npm run lint         # eslint
+```
 
-### The demo clock
+## Secrets
 
-`src/lib/data/clock.ts` generates every fixture timestamp relative to load time,
-so countdowns stay live and "28 minutes ago" stays honest whenever the prototype
-is opened. The weekly dealer event always closes on the next Wednesday at
-6:00 PM CT.
-
-Because pages are prerendered, any *absolute* rendering of a generated timestamp
-would differ between server and client. `src/components/ui/Time.tsx` handles
-that correctly — see the note in that file. It becomes an ordinary `<time>`
-element once timestamps come from the API.
-
----
-
-## Imagery
-
-All photography is openly licensed and checked into `public/images`.
-Provenance and licensing for every file is recorded in
-`public/images/CREDITS.json`; `scripts/fetch_images.py` re-downloads them.
-
-Vehicle photography comes from Wikimedia Commons and is model-accurate — the
-2019 Accord really is a 2019 Accord. Lifestyle and marketing shots come from
-Unsplash.
-
-**These are placeholders.** Swap in Way More's own photography by replacing the
-files, or by editing the paths in `src/lib/images.ts` — no component references
-an image path directly.
-
-Two things are deliberately *not* photographic:
-
-- **Dealer logos** are generated monograms (`DealerMark`), because real dealer
-  logos are licensed brand assets. Drop in uploaded logos by changing that one
-  component.
-- **Testimonial portraits** are initials avatars, not stock photos of people.
-  Attaching a stranger's face to an invented quote is the kind of thing that
-  becomes a problem later. The testimonial copy in
-  `src/components/marketing/Sections.tsx` is sample text and should be replaced
-  with verified reviews before launch.
-
----
-
-## What the backend will need to provide
-
-The fixtures in `src/lib/data` are the contract sketch. In rough dependency
-order:
-
-1. **Auth and roles** — seller / dealer / admin, with row-level security.
-   `SessionContext` is the seam.
-2. **Vehicles** — submission, the approval state machine
-   (`VehicleStatus` in `src/lib/types.ts`), photo upload to storage.
-3. **Events** — the weekly window, which vehicles are in it, open/close jobs.
-4. **Bids** — placement, minimum increments, automatic bidding, outbid
-   notifications.
-5. **Offers** — conversion from top bids at close, accept / counter / decline,
-   expiry.
-6. **Messaging** — threads scoped to a vehicle, with sellers' contact details
-   never exposed to dealers.
-7. **Payout & pickup** — document upload, scheduling, payment release.
-8. **Pricing service** — replaces `priceEstimate()`.
-
-### Known gaps (deliberate, for the next pass)
-
-- No data persists — refreshing resets everything.
-- Photo upload fills a slot with a sample image rather than opening a file
-  picker.
-- Search, filtering and sorting run client-side over the full fixture set;
-  they will need to move server-side with pagination.
-- No real auth, so portal routes are not guarded.
-- Copy is written to be plausible, not legally reviewed. Fees, timings and the
-  unwind policy are placeholders for the real business rules.
-
----
-
-## Accessibility & quality
-
-- Semantic landmarks, a skip link, and labelled form controls throughout.
-- Keyboard-visible focus rings; `aria-current`, `aria-expanded`, `aria-pressed`
-  and `role="tablist"` where they apply.
-- `prefers-reduced-motion` is honoured globally.
-- Verified: clean `tsc --noEmit`, clean `eslint`, successful production build,
-  and all 36 routes render with no console errors, no hydration mismatches and
-  no horizontal overflow at both 1440px and 390px.
+No keys, passwords or credentials are committed. `.env.local` and `work/` (where the
+seed script writes the demo account passwords) are git-ignored. `.env.example` lists
+every variable with placeholder values. The browser only ever gets the Supabase
+**publishable** key. The secret/service key is optional, server-only, and used only by
+the auction lab.
