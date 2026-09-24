@@ -4,10 +4,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, type ComponentType, type ReactNode } from "react";
 import { Logo } from "@/components/brand/Logo";
-import { Avatar, DealerMark } from "@/components/brand/DealerMark";
 import type { IconProps } from "@/components/icons";
-import { IconBell, IconChevronDown, IconLogout, IconMenu, IconX } from "@/components/icons";
+import { IconBell, IconLogout, IconMenu, IconX } from "@/components/icons";
 import { cx } from "@/lib/format";
+import { IdentityMenu } from "./IdentityMenu";
 
 export interface NavItem {
   href: string;
@@ -113,20 +113,12 @@ export function PortalShell({
             )}
           </button>
 
-          <button className="flex items-center gap-2.5 rounded-xl py-1.5 pl-1.5 pr-2.5 hover:bg-paper transition-colors">
-            {identity.markColor ? (
-              <DealerMark initials={identity.initials} color={identity.markColor} size={34} rounded="full" />
-            ) : (
-              <Avatar initials={identity.initials} size={34} tone="muted" />
-            )}
-            <span className="hidden sm:block text-left leading-tight">
-              <span className="block text-[13.5px] font-semibold text-heading">{identity.name}</span>
-              {identity.subtitle && (
-                <span className="block text-[11.5px] text-muted">{identity.subtitle}</span>
-              )}
-            </span>
-            <IconChevronDown size={15} className="text-muted" />
-          </button>
+          <IdentityMenu
+            name={identity.name}
+            subtitle={identity.subtitle}
+            initials={identity.initials}
+            markColor={identity.markColor}
+          />
         </div>
       </header>
 

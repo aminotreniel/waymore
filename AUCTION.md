@@ -139,6 +139,28 @@ winning bid.
 
 100 requests across three test identities is NOT a capacity claim for 100 dealers.
 
+## Auction lab
+
+`/dealer/lab`, administrators only, enabled with `WAYMORE_LAB=true` and a
+server-only `SUPABASE_SECRET_KEY`. One button per requirement, plus a run-all.
+
+Each scenario runs against the live database using real authenticated dealer
+sessions, not the service key. The secret key is used only to create and delete
+the run's own seller, vehicles, event and auctions, and to move a deadline,
+which no dealer can do. Every run tears its fixtures down afterwards, so the
+seeded demo data is never touched.
+
+The simultaneous-bidder scenario creates one real Supabase account per dealer,
+up to 100, and fires them at a single auction in the same instant. It runs twice:
+once with every dealer bidding the identical amount, where exactly one can win,
+and once with escalating amounts, where it checks the accepted bids form a
+strictly increasing, gap-free ledger and that the header agrees with it. It
+reports accepted, rejected with a reason, dropped, and the latency spread.
+
+This is the difference between "100 requests from 3 accounts" and 100
+independent dealer sessions. Use the lab's numbers, not the integration
+script's, when talking about concurrency.
+
 ## Before a real weekly auction
 
 Load test 100+ independent dealer sessions, multiple vehicles, high bid rates and

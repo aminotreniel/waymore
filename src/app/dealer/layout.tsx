@@ -83,6 +83,16 @@ export default function DealerLayout({
             label: "Help & Support",
             icon: IconHeadset,
           },
+          // Demo administrators only: the auction test lab.
+          ...(data.is_admin
+            ? [
+                {
+                  href: "/dealer/lab",
+                  label: "Auction Lab",
+                  icon: IconGavel,
+                },
+              ]
+            : []),
         ]}
         footer={
           <div className="space-y-2">
